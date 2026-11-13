@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Strength Checker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .box {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 30px;
+      border-radius: 12px;
+      width: 350px;
+      text-align: center;
+    }
+    input {
+      width: 90%;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+    .bar {
+      height: 10px;
+      background: #555;
+      border-radius: 5px;
+      margin-top: 15px;
+      overflow: hidden;
+    }
+    #strength {
+      height: 100%;
+      width: 0%;
+      transition: 0.3s;
+    }
+    #result {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    ul {
+      text-align: left;
+      font-size: 14px;
+      padding-left: 20px;
+    }
+    .ok { color: #4cff4c; }
+    .no { color: #ff6b6b; }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h2>🔐 Password Checker</h2>
+    <input type="password" id="password" placeholder="Type a password..." oninput="checkPassword()">
+
+    <div class="bar"><div id="strength"></div></div>
+    <p id="result">Enter a password</p>
+
+    <ul>
+      <li id="length" class="no">At least 8 characters</li>
+      <li id="upper" class="no">An uppercase letter (A-Z)</li>
+      <li id="lower" class="no">A lowercase letter (a-z)</li>
+      <li id="number" class="no">A number (0-9)</li>
+      <li id="symbol" class="no">A symbol (!@#$...)</li>
+    </ul>
+  </div>
+
+  <script>
+    function checkPassword() {
+      const pass = document.getElementById("password").value;
+
+      const rules = {
+        length: pass.length >= 8,
+        upper: /[A-Z]/.test(pass),
+        lower: /[a-z]/.test(pass),
+        number: /[0-9]/.test(pass),
+        symbol: /[^A-Za-z0-9]/.test(pass)
+      };
+
+      let score = 0;
+      for (const rule in rules) {
+        document.getElementById(rule).className = rules[rule] ? "ok" : "no";
+        if (rules[rule]) score++;
+      }
+
+      const bar = document.getElementById("strength");
+      const result = document.getElementById("result");
+      bar.style.width = (score * 20) + "%";
+
+      if (pass.length === 0) {
+        result.textContent = "Enter a password";
+        bar.style.width = "0%";
+      } else if (score <= 2) {
+        result.textContent = "Weak ❌";
+        bar.style.background = "red";
+      } else if (score <= 4) {
+        result.textContent = "Medium ⚠️";
+        bar.style.background = "orange";
+      } else {
+        result.textContent = "Strong ✅";
+        bar.style.background = "limegreen";
+      }
+    }
+  </script>
+
+</body>
+</html>
